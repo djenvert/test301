@@ -36,18 +36,25 @@ START=`date +%s.%N`
 # change IFS=';' to the good column separator
 cat $INPUT | while IFS=';' read source target; do
 CURL=`curl -I -s $ROOT$source`
+CURL_T=`curl -I -s $ROOT$target`
 echo "testing redirect from $ROOT$source to $ROOT$target...";
-R=`echo "$CURL" | egrep '^HTTP\/1\.1 301'`
-L=`echo "$CURL" | grep "^Location: $ROOT$target"`
-sleep 1
+RESULT=`echo "$CURL"`
+R=`echo "$RESULT" | egrep '^HTTP\/1\.1 301'`
+L=`echo "$RESULT" | grep "^Location: $ROOT$target"`
+E=`echo "$CURL_T" | egrep '^HTTP\/1\.1 404'`
+#sleep 1
  if [ -z "$R" ]
     then
          echo $ROOT$source >> $REDIRECTKO
 		 echo "No 301 code redirect for this URL"
  elif [ -z "$L" ]
     then
-         echo "$ROOT$source doesn't redirect to $ROOT$target" >> $LOCATIONKO
+        echo "$ROOT$source doesn't redirect to $ROOT$target" >> $LOCATIONKO
 		 echo "This URL is not redirected to the good target"
+ elif [ -n "$E" ]
+    then
+        echo "$ROOT$target leads to a 404" >> $REDIRECT404
+            echo "This URL is redirected to a 404"
  else
  	 	echo "it seems ok"
 	fi
