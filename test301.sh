@@ -3,7 +3,7 @@
 #This script aims at checking if 301 redirects are properly implemented
 #according to a simple csv file with two columns
 
-function help () {
+function help {
 	echo "test301";
 	echo "usage: test301.sh myfile.csv";
 	echo "where myfile.csv is a csv file with two columns separated by semi-colon (;) with target and source url, each beginning by /";
