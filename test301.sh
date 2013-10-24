@@ -30,6 +30,9 @@ then
 else
     help
 fi
+
+START=`date +%s.%N`
+
 # change IFS=';' to the good column separator
 cat $INPUT | while IFS=';' read source target; do
 CURL=`curl -I -s $ROOT$source`
@@ -50,5 +53,10 @@ sleep 1
 	fi
 	echo ""
  done
+
+END=`date +%s.%N`
+
+ELAPSED=$(echo "$END - $START" | bc)
+echo "time elapsed : $ELAPSED"
  
 #EOF
