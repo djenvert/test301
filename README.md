@@ -4,11 +4,13 @@ test301
 Simple bash script to check redirections after a migration, from a csv file
 
 <pre>
-	test301.sh mapping-file.csv
+	test301.sh --url www.mydomain.com --file mapping-file.csv
 </pre>
 
 The CSV file to use has the following format:
-source-url;target-url
+
+source-uri;target-uri
+
 /my/source/folder/page.html;/my/target/folder/page.html
 
 The script generates two report files, one with the URL not redirected, the other one with the URL not redirected to the good target URL.
