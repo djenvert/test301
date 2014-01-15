@@ -4,16 +4,35 @@
 #according to a simple csv file with two columns
 
 function help {
-	echo "test301";
-	echo "usage: test301.sh myfile.csv";
-	echo "where myfile.csv is a csv file with two columns separated by semi-colon (;) with target and source url, each beginning by /";
-	echo "/my/source/folder/index.html;/my/target/folder/indexe.html"
-	echo "root domain name can be customized using the ROOT variable";
-	echo "there's a sleep period of 1 second between each curl that can be removed (caution)";
+	echo "Usage:"
+	echo "  ./test301.sh --url www.mydomain.com --file myfile.csv"
+	echo "    www.mydomain.com is the root domain you want to test the redirections on"
+	echo "    myfile.csv       is a csv file with two columns separated by semi-colon (;) with target and source uri, each beginning by /"
+	echo "      ex: /my/source/folder/index.html;/my/target/folder/indexe.html"
+	echo "  There's a sleep period of 1 second between each curl that can be removed (caution)"
 }
 
-ROOT="http://preprod1.uk.thenorthface.com"
- 
+# parse arguments
+while [ $# -gt "0" ]; do
+    key="$1"
+    shift
+    case $key in
+        --url)
+        ROOT="$1"
+        shift
+        ;;
+        --file)
+        INPUT="$1"
+        shift
+        ;;
+    esac
+done
+
+if [ -z "$ROOT" ] || [ -z "$INPUT" ]; then
+    help
+    exit
+fi
+
 #Temporary file I am using to store non 301 redirected URLs.
 REDIRECTKO=301koreport.txt
 LOCATIONKO=locationkoreport.txt
@@ -23,13 +42,6 @@ REDIRECT404=redirect404report.txt
 rm -f $REDIRECTKO
 rm -f $LOCATIONKO
 rm -f $REDIRECT404
-
-if [ $1 ]
-then
-    INPUT=$1 
-else
-    help
-fi
 
 START=`date +%s.%N`
 
